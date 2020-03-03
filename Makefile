@@ -1,4 +1,5 @@
 install:
+	sudo apt install default-libmysqlclient-dev
 	python3 --version
 	python3 -m pip --version
 	python3 -m venv venv
@@ -6,3 +7,6 @@ install:
 
 run:
 	venv/bin/python3 manage.py runserver
+
+inspectdb:
+	venv/bin/python3 manage.py inspectdb
