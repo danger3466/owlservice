@@ -3,10 +3,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Models(models.Model):
+class Model(models.Model):
     id = models.AutoField(db_column='model_id', primary_key=True)
     model_name = models.CharField(max_length=64)
-    #model_author = models.ForeignKey('Users', models.DO_NOTHING, db_column='model_author')
+    user = models.ForeignKey(User, db_column='model_author', on_delete=models.CASCADE)
     model_photo = models.CharField(max_length=255, blank=True, null=True)
     model_url = models.CharField(max_length=256, blank=True, null=True)
 
@@ -32,15 +32,15 @@ class Status(models.Model):
         db_table = 'status'
 
 
-class Tickets(models.Model):
+class Ticket(models.Model):
     id = models.AutoField(db_column='ticket_id', primary_key=True)
     user = models.ForeignKey(User, db_column='user_id', on_delete=models.CASCADE)
-    model = models.ForeignKey(Models, db_column='model_id', on_delete=models.CASCADE)
+    model = models.ForeignKey(Model, db_column='model_id', on_delete=models.CASCADE)
     client_name = models.CharField(max_length=48)
     client_phone = models.CharField(max_length=18, blank=True, null=True)
     imei = models.BigIntegerField(blank=True, null=True)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    date_create = models.DateTimeField()
+    status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)
+    date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -48,13 +48,16 @@ class Tickets(models.Model):
         db_table = 'tickets'
 
 
-#class Comments(models.Model):
-#    comment_id = models.AutoField(primary_key=True)
-#    ticket = models.ForeignKey('Tickets', models.DO_NOTHING)
-#    user = models.ForeignKey('Users', models.DO_NOTHING)
-#    comment = models.CharField(max_length=254)
-#    date_create = models.DateTimeField()
+class Comment(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    ticket = models.ForeignKey(Ticket, db_column='ticket_id', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, db_column='user_id', on_delete=models.CASCADE)
+    comment = models.CharField(max_length=254)
+    date_create = models.DateTimeField(auto_now_add=True)
 
-#    class Meta:
-#        managed = False
-#        db_table = 'comments'
+    def __str__(self):
+        return "{} - {}".format(self.user.username, self.comment)
+
+    class Meta:
+        managed = False
+        db_table = 'comments'

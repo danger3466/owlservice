@@ -1,11 +1,14 @@
 from django.contrib import admin
 
-from .models import Models, Tickets, Status
+from api.models import Model, Ticket, Status, Comment
 
-class TicketsAdmin(admin.ModelAdmin):
+
+class TicketAdmin(admin.ModelAdmin):
     list_display = ('user', 'model', 'client_name', 'imei', 'status')
     list_filter = ('status',)
 
-admin.site.register(Tickets, TicketsAdmin)
-admin.site.register(Models)
+
+admin.site.register(Ticket, TicketAdmin)
+admin.site.register(Model)
 admin.site.register(Status)
+admin.site.register(Comment)
