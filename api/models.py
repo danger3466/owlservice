@@ -39,7 +39,7 @@ class Ticket(models.Model):
     client_name = models.CharField(max_length=48)
     client_phone = models.CharField(max_length=18, blank=True, null=True)
     imei = models.BigIntegerField(blank=True, null=True)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE, default=1)
+    status = models.ForeignKey(Status, on_delete=models.SET_DEFAULT, default=1)
     date_create = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(blank=True, null=True)
 
